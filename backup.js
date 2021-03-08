@@ -7,6 +7,8 @@ const port = 4320;
 const app = express()
 app.use(cors())
 
+var count = 0;
+
 var lastFile = [];
 var obj = {
     table: []
@@ -33,27 +35,26 @@ var datajson = {students:[
   ]}
 
 //Guarda un archivo.json cada que lo llamen
-function addFile() {
-    console.log("Fileee")
+function addFile(dataC) {
+    console.log("323")
     count = count +1 
-    var path = './backup'+count+'.json';
-    var json = JSON.stringify(obj);
-    fs.writeFileSync(path, json , err=> {
-        if (err)   res.status(500).send({error: "No se pudo guardar"});
-        else    res.status(200).send({message : "Json guardado"+path});
-    });
-}
+    let now= new Date();
+    var path = './backup'+count+'_'+now+'.json';
+    var json = JSON.stringify(dataC);
+    Fs.writeFileSync(path, json);
+    console.log("jhgfd")
+}   
 
 //Por medio de un bash hace una petición al servidor de la lista de estudiantes cada cierto tiempo
 app.get('/students_backup', async(req, res) => {
     //Petición al MainServer
     await axios.get(`http://localhost:${3000}/students_backup`)
-    .then(async function (response) {
+    .then(function (response) {
         //Hace una petición GET al servidor
         console.log(response.data)
         obj.table = response.data;
-        await addFile();
-        lastFile = obj.table;
+        addFile(response.data);
+        lastFile = response.data;
         res.sendStatus(200);
     }).catch(function (error) {
         res.sendStatus(404);
