@@ -38,6 +38,11 @@ app.get('/backup_info', (req, res) => {
     res.send(lastFile)
 })
 
+app.get('/hola', (req, res) => {
+    //res.json(lastFile)
+    res.send("hola")
+})
+
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
 })
